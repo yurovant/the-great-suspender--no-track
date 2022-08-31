@@ -29,7 +29,6 @@ Done, without errors.
 
 ### Shoutouts
 
-This package uses the [html2canvas](https://github.com/niklasvh/html2canvas) library written by Niklas von Hertzen.  
-It also uses the indexedDb wrapper [db.js](https://github.com/aaronpowell/db.js) written by Aaron Powell.  
-Thank you also to [BrowserStack](https://www.browserstack.com) for providing free chrome testing tools.  
-Original source from [The Great Suspender v7.1.8](https://github.com/greatsuspender/thegreatsuspender).  
+* This package uses the [html2canvas](https://github.com/niklasvh/html2canvas) library written by Niklas von Hertzen.  
+* It also uses the IndexedDB wrapper [db.js](https://github.com/aaronpowell/db.js) written by Aaron Powell.  
+* Original source from [The Great Suspender v7.1.8](https://github.com/greatsuspender/thegreatsuspender).
