@@ -1,6 +1,6 @@
 # The Great Suspender - Without analytics tracking
 
-Modified version of "The Great Suspender" without analytics tracking and rogue .js files from anonymous developer who is now in control of the GitHub source & web store versions.
+Modified version of "The Great Suspender" without analytics tracking and rogue JavaScript files from anonymous developer who is now in control of the GitHub source and web store versions.
 
 #### Read more:
 - [New ownership announcement](https://github.com/greatsuspender/thegreatsuspender/issues/1175)
@@ -13,14 +13,15 @@ This project is a fork from [v7.1.8 of The Great Suspender](https://github.com/g
 
 ### Build from GitHub
 
-Dependencies: openssl, npm.
+Dependencies:
+- `openssl`
+- `Node.js`
+- `npm`
 
 Clone the repository and run these commands:
-```
-npm install
-npm run generate-key
-npm run build
-```
+- `npm install`
+- `npm run generate-key`
+- `npm run build`
 
 It should say:
 ```
