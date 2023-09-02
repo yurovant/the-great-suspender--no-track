@@ -18,7 +18,7 @@ const requiredLibs = [
 ];
 
 function loadJsFile(fileName) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const script = document.createElement('script');
     script.onload = resolve;
     script.src = chrome.extension.getURL(`js/${fileName}.js`);
@@ -27,7 +27,7 @@ function loadJsFile(fileName) {
 }
 
 function loadJsonFixture(fileName) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const request = new XMLHttpRequest();
     request.open(
       'GET',
@@ -100,7 +100,7 @@ async function runTests() {
 if (document.readyState !== 'loading') {
   runTests();
 } else {
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     runTests();
   });
 }

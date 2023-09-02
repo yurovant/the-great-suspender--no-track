@@ -1,7 +1,7 @@
 /*global gsUtils */
 // eslint-disable-next-line no-unused-vars
 function GsTabQueue(queueId, queueProps) {
-  return (function() {
+  return (function () {
     'use strict';
 
     const STATUS_QUEUED = 'queued';
@@ -160,11 +160,11 @@ function GsTabQueue(queueId, queueProps) {
         res = resolve;
         rej = reject;
       });
-      promise.resolve = o => {
+      promise.resolve = (o) => {
         res(o);
         return promise;
       };
-      promise.reject = o => {
+      promise.reject = (o) => {
         rej(o);
         return promise;
       };
@@ -213,8 +213,8 @@ function GsTabQueue(queueId, queueProps) {
         // tabDetails
       );
 
-      const _resolveTabPromise = r => resolveTabPromise(tabDetails, r);
-      const _rejectTabPromise = e => rejectTabPromise(tabDetails, e);
+      const _resolveTabPromise = (r) => resolveTabPromise(tabDetails, r);
+      const _rejectTabPromise = (e) => rejectTabPromise(tabDetails, e);
       const _requeueTab = (requeueDelay, executionProps) => {
         requeueTab(tabDetails, requeueDelay, executionProps);
       };

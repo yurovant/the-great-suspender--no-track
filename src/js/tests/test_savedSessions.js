@@ -1,7 +1,7 @@
 /*global chrome, gsIndexedDb, getFixture, assertTrue, FIXTURE_SAVED_SESSIONS */
 var testSuites = typeof testSuites === 'undefined' ? [] : testSuites;
 testSuites.push(
-  (function() {
+  (function () {
     'use strict';
 
     const tests = [

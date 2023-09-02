@@ -1,7 +1,7 @@
 /*global chrome, gsUtils, assertTrue */
 var testSuites = typeof testSuites === 'undefined' ? [] : testSuites;
 testSuites.push(
-  (function() {
+  (function () {
     'use strict';
 
     const tests = [
@@ -77,13 +77,13 @@ testSuites.push(
             isUrl3Valid &&
             isUrl4Valid &&
             isUrl5Valid &&
-            isUrl6Valid &&
+            isUrl6Valid
         );
       },
 
       // Test gsUtils.executeWithRetries
       async () => {
-        const successPromiseFn = val => new Promise((r, j) => r(val));
+        const successPromiseFn = (val) => new Promise((r, j) => r(val));
         let result1;
         const timeBefore1 = new Date().getTime();
         try {
@@ -101,7 +101,7 @@ testSuites.push(
         const isTime1Valid = timeTaken1 >= 0 && timeTaken1 < 100;
         const isResult1Valid = result1 === 'a';
 
-        const errorPromiseFn = val => new Promise((r, j) => j());
+        const errorPromiseFn = (val) => new Promise((r, j) => j());
         let result2;
         const timeBefore2 = new Date().getTime();
         try {

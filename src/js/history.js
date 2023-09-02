@@ -1,5 +1,5 @@
 /*global chrome, historyItems, historyUtils, gsSession, gsIndexedDb, gsUtils */
-(function(global) {
+(function (global) {
   'use strict';
 
   try {
@@ -37,7 +37,7 @@
       chrome.i18n.getMessage('js_history_confirm_delete')
     );
     if (result) {
-      gsIndexedDb.removeSessionFromHistory(sessionId).then(function() {
+      gsIndexedDb.removeSessionFromHistory(sessionId).then(function () {
         window.location.reload();
       });
     }
@@ -48,7 +48,7 @@
 
     gsIndexedDb
       .removeTabFromSessionHistory(sessionId, windowId, tabId)
-      .then(function(session) {
+      .then(function (session) {
         gsUtils.removeInternalUrlsFromSession(session);
         //if we have a valid session returned
         if (session) {
@@ -65,9 +65,8 @@
   }
 
   async function toggleSession(element, sessionId) {
-    var sessionContentsEl = element.getElementsByClassName(
-      'sessionContents'
-    )[0];
+    var sessionContentsEl =
+      element.getElementsByClassName('sessionContents')[0];
     var sessionIcon = element.getElementsByClassName('sessionIcon')[0];
     if (sessionIcon.classList.contains('icon-plus-squared-alt')) {
       sessionIcon.classList.remove('icon-plus-squared-alt');
@@ -85,7 +84,7 @@
 
     gsIndexedDb
       .fetchSessionBySessionId(sessionId)
-      .then(async function(curSession) {
+      .then(async function (curSession) {
         if (!curSession || !curSession.windows) {
           return;
         }
@@ -126,43 +125,43 @@
 
     addClickListenerToElement(
       sessionEl.getElementsByClassName('sessionIcon')[0],
-      function() {
+      function () {
         toggleSession(sessionEl, session.sessionId); //async. unhandled promise
       }
     );
     addClickListenerToElement(
       sessionEl.getElementsByClassName('sessionLink')[0],
-      function() {
+      function () {
         toggleSession(sessionEl, session.sessionId); //async. unhandled promise
       }
     );
     addClickListenerToElement(
       sessionEl.getElementsByClassName('exportLink')[0],
-      function() {
+      function () {
         historyUtils.exportSessionWithId(session.sessionId);
       }
     );
     addClickListenerToElement(
       sessionEl.getElementsByClassName('resuspendLink')[0],
-      function() {
+      function () {
         reloadTabs(session.sessionId, null, true); // async
       }
     );
     addClickListenerToElement(
       sessionEl.getElementsByClassName('reloadLink')[0],
-      function() {
+      function () {
         reloadTabs(session.sessionId, null, false); // async
       }
     );
     addClickListenerToElement(
       sessionEl.getElementsByClassName('saveLink')[0],
-      function() {
+      function () {
         historyUtils.saveSession(session.sessionId);
       }
     );
     addClickListenerToElement(
       sessionEl.getElementsByClassName('deleteLink')[0],
-      function() {
+      function () {
         deleteSession(session.sessionId);
       }
     );
@@ -175,13 +174,13 @@
 
     addClickListenerToElement(
       windowEl.getElementsByClassName('resuspendLink')[0],
-      function() {
+      function () {
         reloadTabs(session.sessionId, window.id, true); // async
       }
     );
     addClickListenerToElement(
       windowEl.getElementsByClassName('reloadLink')[0],
-      function() {
+      function () {
         reloadTabs(session.sessionId, window.id, false); // async
       }
     );
@@ -194,7 +193,7 @@
 
     addClickListenerToElement(
       tabEl.getElementsByClassName('removeLink')[0],
-      function() {
+      function () {
         removeTab(tabEl, session.sessionId, window.id, tab.id);
       }
     );
@@ -213,8 +212,8 @@
     sessionsDiv.innerHTML = '';
     historyDiv.innerHTML = '';
 
-    gsIndexedDb.fetchCurrentSessions().then(function(currentSessions) {
-      currentSessions.forEach(function(session, index) {
+    gsIndexedDb.fetchCurrentSessions().then(function (currentSessions) {
+      currentSessions.forEach(function (session, index) {
         gsUtils.removeInternalUrlsFromSession(session);
         var sessionEl = createSessionElement(session);
         if (firstSession) {
@@ -226,8 +225,8 @@
       });
     });
 
-    gsIndexedDb.fetchSavedSessions().then(function(savedSessions) {
-      savedSessions.forEach(function(session, index) {
+    gsIndexedDb.fetchSavedSessions().then(function (savedSessions) {
+      savedSessions.forEach(function (session, index) {
         gsUtils.removeInternalUrlsFromSession(session);
         var sessionEl = createSessionElement(session);
         historyDiv.appendChild(sessionEl);
@@ -239,12 +238,12 @@
       historyUtils.importSession,
       false
     );
-    importSessionEl.onclick = function() {
+    importSessionEl.onclick = function () {
       importSessionActionEl.click();
     };
 
     var migrateTabsEl = document.getElementById('migrateTabs');
-    migrateTabsEl.onclick = function() {
+    migrateTabsEl.onclick = function () {
       var migrateTabsFromIdEl = document.getElementById('migrateFromId');
       historyUtils.migrateTabs(migrateTabsFromIdEl.value);
     };
@@ -253,15 +252,14 @@
     if (chrome.extension.inIncognitoContext) {
       Array.prototype.forEach.call(
         document.getElementsByClassName('noIncognito'),
-        function(el) {
+        function (el) {
           el.style.display = 'none';
         }
       );
     }
   }
 
-  gsUtils.documentReadyAndLocalisedAsPromsied(document).then(function() {
+  gsUtils.documentReadyAndLocalisedAsPromsied(document).then(function () {
     render();
   });
-
 })(this);

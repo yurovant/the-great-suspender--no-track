@@ -5,8 +5,8 @@
  * Available under GNU GENERAL PUBLIC LICENSE v2
  * http://github.com/aciidic/thegreatsuspender
  * ლ(ಠ益ಠლ)
-*/
-(function() {
+ */
+(function () {
   'use strict';
 
   let isFormListenerInitialised = false;
@@ -22,7 +22,7 @@
           event.target.tagName.toUpperCase() === 'TEXTAREA' ||
           event.target.tagName.toUpperCase() === 'FORM' ||
           event.target.isContentEditable === true ||
-          event.target.type === "application/pdf"
+          event.target.type === 'application/pdf'
         ) {
           isReceivingFormInput = true;
           if (!isBackgroundConnectable()) {
@@ -44,45 +44,43 @@
 
   function init() {
     //listen for background events
-    chrome.runtime.onMessage.addListener(function(
-      request,
-      sender,
-      sendResponse
-    ) {
-      if (request.hasOwnProperty('action')) {
-        if (request.action === 'requestInfo') {
-          sendResponse(buildReportTabStatePayload());
-          return false;
+    chrome.runtime.onMessage.addListener(
+      function (request, sender, sendResponse) {
+        if (request.hasOwnProperty('action')) {
+          if (request.action === 'requestInfo') {
+            sendResponse(buildReportTabStatePayload());
+            return false;
+          }
         }
-      }
 
-      if (request.hasOwnProperty('scrollPos')) {
-        if (request.scrollPos !== '' && request.scrollPos !== '0') {
-          document.body.scrollTop = request.scrollPos;
-          document.documentElement.scrollTop = request.scrollPos;
+        if (request.hasOwnProperty('scrollPos')) {
+          if (request.scrollPos !== '' && request.scrollPos !== '0') {
+            document.body.scrollTop = request.scrollPos;
+            document.documentElement.scrollTop = request.scrollPos;
+          }
         }
-      }
-      if (request.hasOwnProperty('ignoreForms')) {
-        isIgnoreForms = request.ignoreForms;
-        if (isIgnoreForms) {
-          initFormInputListener();
+        if (request.hasOwnProperty('ignoreForms')) {
+          isIgnoreForms = request.ignoreForms;
+          if (isIgnoreForms) {
+            initFormInputListener();
+          }
+          isReceivingFormInput = isReceivingFormInput && isIgnoreForms;
         }
-        isReceivingFormInput = isReceivingFormInput && isIgnoreForms;
-      }
-      if (request.hasOwnProperty('tempWhitelist')) {
-        if (isReceivingFormInput && !request.tempWhitelist) {
-          isReceivingFormInput = false;
+        if (request.hasOwnProperty('tempWhitelist')) {
+          if (isReceivingFormInput && !request.tempWhitelist) {
+            isReceivingFormInput = false;
+          }
+          tempWhitelist = request.tempWhitelist;
         }
-        tempWhitelist = request.tempWhitelist;
+        sendResponse(buildReportTabStatePayload());
+        return false;
       }
-      sendResponse(buildReportTabStatePayload());
-      return false;
-    });
+    );
   }
 
   function waitForRuntimeReady(retries) {
     retries = retries || 0;
-    return new Promise(r => r(chrome.runtime)).then(chromeRuntime => {
+    return new Promise((r) => r(chrome.runtime)).then((chromeRuntime) => {
       if (chromeRuntime) {
         return Promise.resolve();
       }
@@ -90,7 +88,7 @@
         return Promise.reject('Failed waiting for chrome.runtime');
       }
       retries += 1;
-      return new Promise(r => window.setTimeout(r, 500)).then(() =>
+      return new Promise((r) => window.setTimeout(r, 500)).then(() =>
         waitForRuntimeReady(retries)
       );
     });
@@ -116,8 +114,8 @@
         isIgnoreForms && isReceivingFormInput
           ? 'formInput'
           : tempWhitelist
-            ? 'tempWhitelist'
-            : 'normal',
+          ? 'tempWhitelist'
+          : 'normal',
       scrollPos:
         document.body.scrollTop || document.documentElement.scrollTop || 0,
     };
@@ -125,7 +123,7 @@
 
   waitForRuntimeReady()
     .then(init)
-    .catch(e => {
+    .catch((e) => {
       console.error(e);
       setTimeout(() => {
         init();

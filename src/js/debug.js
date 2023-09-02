@@ -1,5 +1,5 @@
 /*global chrome, tgs, gsUtils, gsFavicon, gsStorage, gsChrome */
-(function(global) {
+(function (global) {
   'use strict';
 
   try {
@@ -50,8 +50,8 @@
     for (const [i, curTab] of tabs.entries()) {
       currentTabs[tabs[i].id] = tabs[i];
       debugInfoPromises.push(
-        new Promise(r =>
-          tgs.getDebugInfo(curTab.id, o => {
+        new Promise((r) =>
+          tgs.getDebugInfo(curTab.id, (o) => {
             o.tab = curTab;
             r(o);
           })
@@ -69,29 +69,29 @@
 
   function addFlagHtml(elementId, getterFn, setterFn) {
     document.getElementById(elementId).innerHTML = getterFn();
-    document.getElementById(elementId).onclick = function(e) {
+    document.getElementById(elementId).onclick = function (e) {
       const newVal = !getterFn();
       setterFn(newVal);
       document.getElementById(elementId).innerHTML = newVal;
     };
   }
 
-  gsUtils.documentReadyAndLocalisedAsPromsied(document).then(async function() {
+  gsUtils.documentReadyAndLocalisedAsPromsied(document).then(async function () {
     await fetchInfo();
     addFlagHtml(
       'toggleDebugInfo',
       () => gsUtils.isDebugInfo(),
-      newVal => gsUtils.setDebugInfo(newVal)
+      (newVal) => gsUtils.setDebugInfo(newVal)
     );
     addFlagHtml(
       'toggleDebugError',
       () => gsUtils.isDebugError(),
-      newVal => gsUtils.setDebugError(newVal)
+      (newVal) => gsUtils.setDebugError(newVal)
     );
     addFlagHtml(
       'toggleDiscardInPlaceOfSuspend',
       () => gsStorage.getOption(gsStorage.DISCARD_IN_PLACE_OF_SUSPEND),
-      newVal => {
+      (newVal) => {
         gsStorage.setOptionAndSync(
           gsStorage.DISCARD_IN_PLACE_OF_SUSPEND,
           newVal
@@ -101,14 +101,14 @@
     addFlagHtml(
       'toggleUseAlternateScreenCaptureLib',
       () => gsStorage.getOption(gsStorage.USE_ALT_SCREEN_CAPTURE_LIB),
-      newVal => {
+      (newVal) => {
         gsStorage.setOptionAndSync(
           gsStorage.USE_ALT_SCREEN_CAPTURE_LIB,
           newVal
         );
       }
     );
-    document.getElementById('claimSuspendedTabs').onclick = async function(e) {
+    document.getElementById('claimSuspendedTabs').onclick = async function (e) {
       const tabs = await gsChrome.tabsQuery();
       for (const tab of tabs) {
         if (
@@ -128,7 +128,7 @@
     document
       .getElementById('backgroundPage')
       .setAttribute('href', extensionsUrl);
-    document.getElementById('backgroundPage').onclick = function() {
+    document.getElementById('backgroundPage').onclick = function () {
       chrome.tabs.create({ url: extensionsUrl });
     };
 

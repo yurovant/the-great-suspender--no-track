@@ -1,6 +1,6 @@
 /*global chrome, gsSession, gsUtils, gsFavicon */
 // eslint-disable-next-line no-unused-vars
-var historyItems = (function(global) {
+var historyItems = (function (global) {
   'use strict';
 
   if (
@@ -18,8 +18,8 @@ var historyItems = (function(global) {
         session.sessionId === gsSession.getSessionId()
           ? 'current'
           : session.name
-            ? 'saved'
-            : 'recent',
+          ? 'saved'
+          : 'recent',
       sessionContainer,
       sessionTitle,
       sessionSave,
@@ -31,7 +31,7 @@ var historyItems = (function(global) {
       windowReload,
       titleText,
       winCnt = session.windows.length,
-      tabCnt = session.windows.reduce(function(a, b) {
+      tabCnt = session.windows.reduce(function (a, b) {
         return a + b.tabs.length;
       }, 0);
 

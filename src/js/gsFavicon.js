@@ -1,6 +1,6 @@
 /*global gsUtils, gsIndexedDb */
 // eslint-disable-next-line no-unused-vars
-var gsFavicon = (function() {
+var gsFavicon = (function () {
   'use strict';
 
   // const GOOGLE_S2_URL = 'https://www.google.com/s2/favicons?domain_url=';
@@ -38,7 +38,7 @@ var gsFavicon = (function() {
     for (let i = 0; i < defaultIconUrls.length; i += 1) {
       const iconUrl = defaultIconUrls[i];
       faviconPromises.push(
-        new Promise(async resolve => {
+        new Promise(async (resolve) => {
           const faviconMeta = await addDefaultFaviconMeta(iconUrl);
           if (faviconMeta) {
             gsUtils.log(
@@ -89,9 +89,8 @@ var gsFavicon = (function() {
     _defaultFaviconFingerprintById[id] = await createImageFingerprint(
       faviconMeta.normalisedDataUrl
     );
-    _defaultFaviconFingerprintById[
-      id + 'Transparent'
-    ] = await createImageFingerprint(faviconMeta.transparentDataUrl);
+    _defaultFaviconFingerprintById[id + 'Transparent'] =
+      await createImageFingerprint(faviconMeta.transparentDataUrl);
   }
 
   function generateChromeFavIconUrlFromUrl(url) {
@@ -292,9 +291,9 @@ var gsFavicon = (function() {
 
   // Turns the img into a 16x16 black and white dataUrl
   function createImageFingerprint(dataUrl) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const img = new Image();
-      img.onload = async function() {
+      img.onload = async function () {
         const canvas = window.document.createElement('canvas');
         const context = canvas.getContext('2d');
         const threshold = 80;
@@ -310,8 +309,10 @@ var gsFavicon = (function() {
               imageData.data[i + 1] * 0.59 +
               imageData.data[i + 2] * 0.11
           );
-          imageData.data[i] = imageData.data[i + 1] = imageData.data[i + 2] =
-            luma > threshold ? 255 : 0;
+          imageData.data[i] =
+            imageData.data[i + 1] =
+            imageData.data[i + 2] =
+              luma > threshold ? 255 : 0;
           imageData.data[i + 3] = 255;
         }
         context.putImageData(imageData, 0, 0);

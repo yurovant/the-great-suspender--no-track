@@ -13,7 +13,7 @@ var gsIndexedDb = {
 
   server: null,
 
-  getDb: async function() {
+  getDb: async function () {
     if (!gsIndexedDb.server) {
       gsIndexedDb.server = await db.open({
         server: gsIndexedDb.DB_SERVER,
@@ -24,7 +24,7 @@ var gsIndexedDb = {
     return gsIndexedDb.server;
   },
 
-  getSchema: function() {
+  getSchema: function () {
     // NOTE: Called directly from db.js so 'this' cannot be relied upon
     return {
       [gsIndexedDb.DB_PREVIEWS]: {
@@ -80,7 +80,7 @@ var gsIndexedDb = {
     };
   },
 
-  fetchPreviewImage: async function(tabUrl) {
+  fetchPreviewImage: async function (tabUrl) {
     let results;
     try {
       const gsDb = await gsIndexedDb.getDb();
@@ -97,7 +97,7 @@ var gsIndexedDb = {
     return null;
   },
 
-  addPreviewImage: async function(tabUrl, previewUrl) {
+  addPreviewImage: async function (tabUrl, previewUrl) {
     try {
       const gsDb = await gsIndexedDb.getDb();
       const results = await gsDb
@@ -115,7 +115,7 @@ var gsIndexedDb = {
     }
   },
 
-  addSuspendedTabInfo: async function(tabProperties) {
+  addSuspendedTabInfo: async function (tabProperties) {
     try {
       if (!tabProperties.url) {
         gsUtils.error('gsIndexedDb', 'tabProperties.url not set.');
@@ -137,7 +137,7 @@ var gsIndexedDb = {
     }
   },
 
-  fetchTabInfo: async function(tabUrl) {
+  fetchTabInfo: async function (tabUrl) {
     let results;
     try {
       const gsDb = await gsIndexedDb.getDb();
@@ -164,7 +164,7 @@ var gsIndexedDb = {
     return null;
   },
 
-  addFaviconMeta: async function(url, faviconMeta) {
+  addFaviconMeta: async function (url, faviconMeta) {
     try {
       if (!url) {
         gsUtils.error('gsIndexedDb', 'url not set.');
@@ -187,7 +187,7 @@ var gsIndexedDb = {
     }
   },
 
-  fetchFaviconMeta: async function(url) {
+  fetchFaviconMeta: async function (url) {
     let results;
     try {
       const gsDb = await gsIndexedDb.getDb();
@@ -207,7 +207,7 @@ var gsIndexedDb = {
     return null;
   },
 
-  updateSession: async function(session) {
+  updateSession: async function (session) {
     try {
       const gsDb = await gsIndexedDb.getDb();
 
@@ -241,7 +241,7 @@ var gsIndexedDb = {
     }
   },
 
-  fetchCurrentSessions: async function() {
+  fetchCurrentSessions: async function () {
     let results;
     try {
       const gsDb = await gsIndexedDb.getDb();
@@ -257,7 +257,7 @@ var gsIndexedDb = {
     return results;
   },
 
-  fetchSessionBySessionId: async function(sessionId) {
+  fetchSessionBySessionId: async function (sessionId) {
     let results;
     try {
       const gsDb = await gsIndexedDb.getDb();
@@ -293,10 +293,9 @@ var gsIndexedDb = {
     return null;
   },
 
-  createOrUpdateSessionRestorePoint: async function(session, version) {
-    const existingSessionRestorePoint = await gsIndexedDb.fetchSessionRestorePoint(
-      version
-    );
+  createOrUpdateSessionRestorePoint: async function (session, version) {
+    const existingSessionRestorePoint =
+      await gsIndexedDb.fetchSessionRestorePoint(version);
     if (existingSessionRestorePoint) {
       existingSessionRestorePoint.windows = session.windows;
       await gsIndexedDb.updateSession(existingSessionRestorePoint);
@@ -307,9 +306,8 @@ var gsIndexedDb = {
       await gsIndexedDb.addToSavedSessions(session);
       gsUtils.log('gsIndexedDb', 'Created automatic session restore point');
     }
-    const newSessionRestorePoint = await gsIndexedDb.fetchSessionRestorePoint(
-      version
-    );
+    const newSessionRestorePoint =
+      await gsIndexedDb.fetchSessionRestorePoint(version);
     gsUtils.log(
       'gsIndexedDb',
       'New session restore point:',
@@ -318,7 +316,7 @@ var gsIndexedDb = {
     return newSessionRestorePoint || null;
   },
 
-  fetchSessionRestorePoint: async function(versionValue) {
+  fetchSessionRestorePoint: async function (versionValue) {
     let results;
     try {
       const gsDb = await gsIndexedDb.getDb();
@@ -338,7 +336,7 @@ var gsIndexedDb = {
   },
 
   // Returns most recent session in DB_CURRENT_SESSIONS EXCLUDING the current session
-  fetchLastSession: async function() {
+  fetchLastSession: async function () {
     let results;
     try {
       const gsDb = await gsIndexedDb.getDb();
@@ -353,20 +351,17 @@ var gsIndexedDb = {
     if (results && results.length > 0) {
       //don't want to match on current session
       const currentSessionId = gsSession.getSessionId();
-      const lastSession = results.find(o => o.sessionId !== currentSessionId);
+      const lastSession = results.find((o) => o.sessionId !== currentSessionId);
       return lastSession;
     }
     return null;
   },
 
-  fetchSavedSessions: async function() {
+  fetchSavedSessions: async function () {
     let results;
     try {
       const gsDb = await gsIndexedDb.getDb();
-      results = await gsDb
-        .query(gsIndexedDb.DB_SAVED_SESSIONS)
-        .all()
-        .execute();
+      results = await gsDb.query(gsIndexedDb.DB_SAVED_SESSIONS).all().execute();
     } catch (e) {
       gsUtils.error('gsIndexedDb', e);
       results = [];
@@ -374,7 +369,7 @@ var gsIndexedDb = {
     return results;
   },
 
-  addToSavedSessions: async function(session) {
+  addToSavedSessions: async function (session) {
     //if sessionId does not already have an underscore prefix then generate a new unique sessionId for this saved session
     if (session.sessionId.indexOf('_') < 0) {
       session.sessionId = '_' + gsUtils.generateHashCode(session.name);
@@ -386,7 +381,7 @@ var gsIndexedDb = {
   },
 
   // For testing only!
-  clearGsDatabase: async function() {
+  clearGsDatabase: async function () {
     try {
       const gsDb = await gsIndexedDb.getDb();
       await gsDb.clear(gsIndexedDb.DB_CURRENT_SESSIONS);
@@ -396,10 +391,10 @@ var gsIndexedDb = {
     }
   },
 
-  removeTabFromSessionHistory: async function(sessionId, windowId, tabId) {
+  removeTabFromSessionHistory: async function (sessionId, windowId, tabId) {
     const gsSession = await gsIndexedDb.fetchSessionBySessionId(sessionId);
-    gsSession.windows.some(function(curWindow, windowIndex) {
-      const matched = curWindow.tabs.some(function(curTab, tabIndex) {
+    gsSession.windows.some(function (curWindow, windowIndex) {
+      const matched = curWindow.tabs.some(function (curTab, tabIndex) {
         //leave this as a loose matching as sometimes it is comparing strings. other times ints
         if (curTab.id == tabId || curTab.url == tabId) {
           // eslint-disable-line eqeqeq
@@ -427,7 +422,7 @@ var gsIndexedDb = {
     return updatedSession;
   },
 
-  removeSessionFromHistory: async function(sessionId) {
+  removeSessionFromHistory: async function (sessionId) {
     const tableName =
       sessionId.indexOf('_') === 0
         ? gsIndexedDb.DB_SAVED_SESSIONS
@@ -448,7 +443,7 @@ var gsIndexedDb = {
     }
   },
 
-  trimDbItems: async function() {
+  trimDbItems: async function () {
     const maxTabItems = 1000;
     const maxHistories = 5;
 
@@ -525,7 +520,7 @@ var gsIndexedDb = {
    * MIGRATIONS
    */
 
-  performMigration: async function(oldVersion) {
+  performMigration: async function (oldVersion) {
     try {
       const gsDb = await gsIndexedDb.getDb();
       const extensionName = chrome.runtime.getManifest().name || '';

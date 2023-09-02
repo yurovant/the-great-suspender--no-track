@@ -1,5 +1,5 @@
 /*global chrome, gsUtils */
-(function(global) {
+(function (global) {
   'use strict';
 
   try {
@@ -9,7 +9,7 @@
     return;
   }
 
-  gsUtils.documentReadyAndLocalisedAsPromsied(document).then(function() {
+  gsUtils.documentReadyAndLocalisedAsPromsied(document).then(function () {
     var shortcutsEl = document.getElementById('keyboardShortcuts');
     var configureShortcutsEl = document.getElementById('configureShortcuts');
 
@@ -21,8 +21,8 @@
     ];
 
     //populate keyboard shortcuts
-    chrome.commands.getAll(commands => {
-      commands.forEach(command => {
+    chrome.commands.getAll((commands) => {
+      commands.forEach((command) => {
         if (command.name !== '_execute_browser_action') {
           const shortcut =
             command.shortcut !== ''
@@ -40,9 +40,8 @@
     });
 
     //listener for configureShortcuts
-    configureShortcutsEl.onclick = function(e) {
+    configureShortcutsEl.onclick = function (e) {
       chrome.tabs.update({ url: 'chrome://extensions/shortcuts' });
     };
   });
-
 })(this);

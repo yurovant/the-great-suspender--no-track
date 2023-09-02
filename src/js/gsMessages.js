@@ -27,7 +27,7 @@ var gsMessages = {
     );
   },
 
-  sendUpdateToContentScriptOfTab: function(tab) {
+  sendUpdateToContentScriptOfTab: function (tab) {
     if (
       gsUtils.isSpecialTab(tab) ||
       gsUtils.isSuspendedTab(tab, true) ||
@@ -44,7 +44,7 @@ var gsMessages = {
     );
   },
 
-  sendTemporaryWhitelistToContentScript: function(tabId, callback) {
+  sendTemporaryWhitelistToContentScript: function (tabId, callback) {
     gsMessages.sendMessageToContentScript(
       tabId,
       {
@@ -55,7 +55,7 @@ var gsMessages = {
     );
   },
 
-  sendUndoTemporaryWhitelistToContentScript: function(tabId, callback) {
+  sendUndoTemporaryWhitelistToContentScript: function (tabId, callback) {
     gsMessages.sendMessageToContentScript(
       tabId,
       {
@@ -77,20 +77,22 @@ var gsMessages = {
     );
   },
 
-  sendMessageToContentScript: function(tabId, message, severity, callback) {
-    gsMessages.sendMessageToTab(tabId, message, severity, function(
-      error,
-      response
-    ) {
-      if (error) {
-        if (callback) callback(error);
-      } else {
-        if (callback) callback(null, response);
+  sendMessageToContentScript: function (tabId, message, severity, callback) {
+    gsMessages.sendMessageToTab(
+      tabId,
+      message,
+      severity,
+      function (error, response) {
+        if (error) {
+          if (callback) callback(error);
+        } else {
+          if (callback) callback(null, response);
+        }
       }
-    });
+    );
   },
 
-  sendPingToTab: function(tabId, callback) {
+  sendPingToTab: function (tabId, callback) {
     gsMessages.sendMessageToTab(
       tabId,
       {
@@ -101,12 +103,12 @@ var gsMessages = {
     );
   },
 
-  sendMessageToTab: function(tabId, message, severity, callback) {
+  sendMessageToTab: function (tabId, message, severity, callback) {
     if (!tabId) {
       if (callback) callback('tabId not specified');
       return;
     }
-    var responseHandler = function(response) {
+    var responseHandler = function (response) {
       gsUtils.log(tabId, 'response from tab', response);
       if (chrome.runtime.lastError) {
         if (callback) callback(chrome.runtime.lastError);
@@ -125,12 +127,12 @@ var gsMessages = {
     }
   },
 
-  executeScriptOnTab: function(tabId, scriptPath, callback) {
+  executeScriptOnTab: function (tabId, scriptPath, callback) {
     if (!tabId) {
       if (callback) callback('tabId not specified');
       return;
     }
-    chrome.tabs.executeScript(tabId, { file: scriptPath }, function(response) {
+    chrome.tabs.executeScript(tabId, { file: scriptPath }, function (response) {
       if (chrome.runtime.lastError) {
         if (callback) callback(chrome.runtime.lastError);
       } else {
@@ -139,12 +141,12 @@ var gsMessages = {
     });
   },
 
-  executeCodeOnTab: function(tabId, codeString, callback) {
+  executeCodeOnTab: function (tabId, codeString, callback) {
     if (!tabId) {
       if (callback) callback('tabId not specified');
       return;
     }
-    chrome.tabs.executeScript(tabId, { code: codeString }, function(response) {
+    chrome.tabs.executeScript(tabId, { code: codeString }, function (response) {
       if (chrome.runtime.lastError) {
         if (callback) callback(chrome.runtime.lastError);
       } else {

@@ -1,6 +1,6 @@
 /*global chrome, localStorage, tgs, gsUtils, gsChrome, GsTabQueue, gsStorage, gsTabSuspendManager */
 // eslint-disable-next-line no-unused-vars
-var gsTabDiscardManager = (function() {
+var gsTabDiscardManager = (function () {
   'use strict';
 
   const DEFAULT_CONCURRENT_DISCARDS = 5;
@@ -11,7 +11,7 @@ var gsTabDiscardManager = (function() {
   let _discardQueue;
 
   function initAsPromised() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const queueProps = {
         concurrentExecutors: DEFAULT_CONCURRENT_DISCARDS,
         jobTimeout: DEFAULT_DISCARD_TIMEOUT,
@@ -26,7 +26,7 @@ var gsTabDiscardManager = (function() {
 
   function queueTabForDiscard(tab, executionProps, processingDelay) {
     queueTabForDiscardAsPromise(tab, executionProps, processingDelay).catch(
-      e => {
+      (e) => {
         gsUtils.log(tab.id, QUEUE_ID, e);
       }
     );

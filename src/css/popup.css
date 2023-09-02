@@ -22,8 +22,16 @@ html {
   box-sizing: inherit;
 }
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Helvetica,
+    Arial,
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
     'Segoe UI Symbol';
   color: #444;
   padding: 0;
@@ -59,7 +67,7 @@ a {
   background: #3477db;
 }
 #header.blockedFile {
-    background: #a70707;
+  background: #a70707;
 }
 
 .group {

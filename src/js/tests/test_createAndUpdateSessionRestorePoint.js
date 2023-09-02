@@ -1,7 +1,7 @@
 /*global chrome, gsIndexedDb, gsSession, getFixture, loadJsFile, assertTrue, FIXTURE_CURRENT_SESSIONS */
 var testSuites = typeof testSuites === 'undefined' ? [] : testSuites;
 testSuites.push(
-  (function() {
+  (function () {
     'use strict';
 
     const oldVersion = '1.2.34';
@@ -16,10 +16,11 @@ testSuites.push(
         );
         const currentSession = await gsSession.buildCurrentSession();
         currentSession.windows = session1.windows;
-        const sessionRestorePointAfter = await gsIndexedDb.createOrUpdateSessionRestorePoint(
-          currentSession,
-          oldVersion
-        );
+        const sessionRestorePointAfter =
+          await gsIndexedDb.createOrUpdateSessionRestorePoint(
+            currentSession,
+            oldVersion
+          );
         const isSessionRestorePointValid =
           sessionRestorePointAfter.windows[0].tabs.length === 5;
         return assertTrue(isSessionRestorePointValid);
@@ -38,9 +39,8 @@ testSuites.push(
           currentSession1,
           oldVersion
         );
-        const newSessionRestorePointBefore = await gsIndexedDb.fetchSessionBySessionId(
-          currentSession1.sessionId
-        );
+        const newSessionRestorePointBefore =
+          await gsIndexedDb.fetchSessionBySessionId(currentSession1.sessionId);
         const isSessionRestorePointBeforeValid =
           newSessionRestorePointBefore.windows[0].tabs.length === 5;
 
@@ -55,10 +55,11 @@ testSuites.push(
           title: 'testTab',
           url: 'https://test.com',
         });
-        const sessionRestorePointAfter = await gsIndexedDb.createOrUpdateSessionRestorePoint(
-          currentSession2,
-          oldVersion
-        );
+        const sessionRestorePointAfter =
+          await gsIndexedDb.createOrUpdateSessionRestorePoint(
+            currentSession2,
+            oldVersion
+          );
         const sessionRestorePointAfterValid =
           sessionRestorePointAfter.windows[0].tabs.length === 6;
 
@@ -67,7 +68,7 @@ testSuites.push(
           .query(gsIndexedDb.DB_SAVED_SESSIONS)
           .filter(gsIndexedDb.DB_SESSION_PRE_UPGRADE_KEY, oldVersion)
           .execute()
-          .then(o => o.length);
+          .then((o) => o.length);
 
         return assertTrue(
           isSessionRestorePointBeforeValid &&
@@ -86,10 +87,11 @@ testSuites.push(
         const currentSession1 = await gsSession.buildCurrentSession();
         currentSession1.windows = session1.windows;
         const oldCurrentSessionId = currentSession1.sessionId;
-        const sessionRestorePointBefore = await gsIndexedDb.createOrUpdateSessionRestorePoint(
-          currentSession1,
-          oldVersion
-        );
+        const sessionRestorePointBefore =
+          await gsIndexedDb.createOrUpdateSessionRestorePoint(
+            currentSession1,
+            oldVersion
+          );
         const isSessionRestorePointBeforeValid =
           sessionRestorePointBefore.windows[0].tabs.length === 5;
 
@@ -110,10 +112,11 @@ testSuites.push(
           title: 'testTab',
           url: 'https://test.com',
         });
-        const sessionRestorePointAfter = await gsIndexedDb.createOrUpdateSessionRestorePoint(
-          currentSession2,
-          oldVersion
-        );
+        const sessionRestorePointAfter =
+          await gsIndexedDb.createOrUpdateSessionRestorePoint(
+            currentSession2,
+            oldVersion
+          );
         const sessionRestorePointAfterValid =
           sessionRestorePointAfter.windows[0].tabs.length === 6;
 
@@ -122,7 +125,7 @@ testSuites.push(
           .query(gsIndexedDb.DB_SAVED_SESSIONS)
           .filter(gsIndexedDb.DB_SESSION_PRE_UPGRADE_KEY, oldVersion)
           .execute()
-          .then(o => o.length);
+          .then((o) => o.length);
 
         return assertTrue(
           isSessionRestorePointBeforeValid &&

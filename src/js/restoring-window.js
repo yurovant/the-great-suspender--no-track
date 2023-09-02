@@ -1,5 +1,5 @@
 /*global chrome, gsUtils */
-(function(global) {
+(function (global) {
   'use strict';
 
   try {
@@ -9,7 +9,7 @@
     return;
   }
 
-  gsUtils.documentReadyAndLocalisedAsPromsied(document).then(function() {
+  gsUtils.documentReadyAndLocalisedAsPromsied(document).then(function () {
     //do nothing
   });
 })(this);

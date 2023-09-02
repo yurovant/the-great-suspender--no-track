@@ -1,5 +1,5 @@
 /*global chrome, gsStorage, gsChrome, gsUtils */
-(function(global) {
+(function (global) {
   try {
     chrome.extension.getBackgroundPage().tgs.setViewGlobals(global);
   } catch (e) {
@@ -74,7 +74,10 @@
     setSyncNoteVisibility(!gsStorage.getOption(gsStorage.SYNC_SETTINGS));
 
     let searchParams = new URL(location.href).searchParams;
-    if (searchParams.has('firstTime') && !gsStorage.getOption(gsStorage.NO_NAG)) {
+    if (
+      searchParams.has('firstTime') &&
+      !gsStorage.getOption(gsStorage.NO_NAG)
+    ) {
       document
         .querySelector('.welcome-message')
         .classList.remove('reallyHidden');
@@ -124,9 +127,11 @@
 
   function setCleanScreenCaptureVisibility(visible) {
     if (visible) {
-      document.getElementById('cleanScreenCapturesContainer').style.display = 'block';
+      document.getElementById('cleanScreenCapturesContainer').style.display =
+        'block';
     } else {
-      document.getElementById('cleanScreenCapturesContainer').style.display = 'none';
+      document.getElementById('cleanScreenCapturesContainer').style.display =
+        'none';
     }
   }
 
@@ -141,7 +146,7 @@
   function setAutoSuspendOptionsVisibility(visible) {
     Array.prototype.forEach.call(
       document.getElementsByClassName('autoSuspendOption'),
-      function(el) {
+      function (el) {
         if (visible) {
           el.style.display = 'block';
         } else {
@@ -152,7 +157,7 @@
   }
 
   function handleChange(element) {
-    return function() {
+    return function () {
       let prefKey = elementPrefMap[element.id],
         interval;
       //add specific screen element listeners
@@ -172,7 +177,9 @@
           break;
         case gsStorage.ENABLE_CLEAN_SCREENCAPS:
           if (getOptionValue(element)) {
-            chrome.runtime.sendMessage({ action: 'loadCleanScreencaptureBlocklist' })
+            chrome.runtime.sendMessage({
+              action: 'loadCleanScreencaptureBlocklist',
+            });
           }
           break;
       }
@@ -206,7 +213,7 @@
     return [oldValue, newValue];
   }
 
-  gsUtils.documentReadyAndLocalisedAsPromsied(document).then(function() {
+  gsUtils.documentReadyAndLocalisedAsPromsied(document).then(function () {
     initSettings();
 
     var optionEls = document.getElementsByClassName('option'),
@@ -227,20 +234,19 @@
       }
     }
 
-    document.getElementById('testWhitelistBtn').onclick = async e => {
+    document.getElementById('testWhitelistBtn').onclick = async (e) => {
       e.preventDefault();
       const tabs = await gsChrome.tabsQuery();
       const tabUrls = tabs
-        .map(
-          tab =>
-            gsUtils.isSuspendedTab(tab)
-              ? gsUtils.getOriginalUrl(tab.url)
-              : tab.url
+        .map((tab) =>
+          gsUtils.isSuspendedTab(tab)
+            ? gsUtils.getOriginalUrl(tab.url)
+            : tab.url
         )
         .filter(
-          url => !gsUtils.isSuspendedUrl(url) && gsUtils.checkWhiteList(url)
+          (url) => !gsUtils.isSuspendedUrl(url) && gsUtils.checkWhiteList(url)
         )
-        .map(url => (url.length > 55 ? url.substr(0, 52) + '...' : url));
+        .map((url) => (url.length > 55 ? url.substr(0, 52) + '...' : url));
       if (tabUrls.length === 0) {
         alert(chrome.i18n.getMessage('js_options_whitelist_no_matches'));
         return;
@@ -264,7 +270,7 @@
     if (chrome.extension.inIncognitoContext) {
       Array.prototype.forEach.call(
         document.getElementsByClassName('noIncognito'),
-        function(el) {
+        function (el) {
           el.style.display = 'none';
         }
       );

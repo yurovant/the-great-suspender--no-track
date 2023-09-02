@@ -1,7 +1,7 @@
 /*global chrome, gsIndexedDb, gsSession, getFixture, assertTrue, FIXTURE_CURRENT_SESSIONS */
 var testSuites = typeof testSuites === 'undefined' ? [] : testSuites;
 testSuites.push(
-  (function() {
+  (function () {
     'use strict';
 
     const tests = [
@@ -19,9 +19,8 @@ testSuites.push(
         const currentSession = await gsSession.buildCurrentSession();
         currentSession.windows = session1.windows;
         await gsIndexedDb.updateSession(currentSession);
-        const savedCurrentSession = await gsIndexedDb.fetchSessionBySessionId(
-          currentSessionId
-        );
+        const savedCurrentSession =
+          await gsIndexedDb.fetchSessionBySessionId(currentSessionId);
 
         const isSessionValid =
           savedCurrentSession.sessionId === currentSessionId &&
@@ -49,9 +48,8 @@ testSuites.push(
         const currentSession1 = await gsSession.buildCurrentSession();
         currentSession1.windows = session1.windows;
         await gsIndexedDb.updateSession(currentSession1);
-        const dbCurrentSession1 = await gsIndexedDb.fetchSessionBySessionId(
-          currentSessionId
-        );
+        const dbCurrentSession1 =
+          await gsIndexedDb.fetchSessionBySessionId(currentSessionId);
         const isSession1Valid =
           dbCurrentSession1.sessionId === currentSessionId &&
           dbCurrentSession1.windows[0].tabs.length === 5;
@@ -69,9 +67,8 @@ testSuites.push(
         });
         await gsIndexedDb.updateSession(currentSession2);
 
-        const dbCurrentSession2 = await gsIndexedDb.fetchSessionBySessionId(
-          currentSessionId
-        );
+        const dbCurrentSession2 =
+          await gsIndexedDb.fetchSessionBySessionId(currentSessionId);
         const isSession2Valid =
           dbCurrentSession2.sessionId === currentSessionId &&
           dbCurrentSession2.windows.length === 1 &&

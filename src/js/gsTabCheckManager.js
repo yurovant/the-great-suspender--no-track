@@ -1,6 +1,6 @@
 /*global chrome, localStorage, tgs, gsStorage, gsSession, gsMessages, gsUtils, gsTabDiscardManager, gsChrome, GsTabQueue, gsSuspendedTab */
 // eslint-disable-next-line no-unused-vars
-var gsTabCheckManager = (function() {
+var gsTabCheckManager = (function () {
   'use strict';
 
   const DEFAULT_CONCURRENT_TAB_CHECKS = 3;
@@ -20,7 +20,7 @@ var gsTabCheckManager = (function() {
   // However, when a tab gains focus, there is a check to make sure the content
   // script is responsive, as we then need to rely on the form input and scroll behaviour.
   function initAsPromised() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const queueProps = {
         concurrentExecutors: DEFAULT_CONCURRENT_TAB_CHECKS,
         jobTimeout: DEFAULT_TAB_CHECK_TIMEOUT,
@@ -112,7 +112,7 @@ var gsTabCheckManager = (function() {
   }
 
   function queueTabCheck(tab, executionProps, processingDelay) {
-    queueTabCheckAsPromise(tab, executionProps, processingDelay).catch(e => {
+    queueTabCheckAsPromise(tab, executionProps, processingDelay).catch((e) => {
       gsUtils.log(tab.id, QUEUE_ID, e);
     });
   }
@@ -185,14 +185,14 @@ var gsTabCheckManager = (function() {
       discarded: true,
       windowId: tab.windowId,
     });
-    tabs = tabs.filter(o => o.url === tab.url);
+    tabs = tabs.filter((o) => o.url === tab.url);
     gsUtils.log(
       tab.id,
       QUEUE_ID,
       'Searching for discarded tab matching tab: ',
       tab
     );
-    const matchingTab = tabs.find(o => o.index === tab.index);
+    const matchingTab = tabs.find((o) => o.index === tab.index);
     if (matchingTab) {
       tabs = [matchingTab];
     }
@@ -420,7 +420,7 @@ var gsTabCheckManager = (function() {
       return;
     }
 
-    let tabInfo = await new Promise(r => {
+    let tabInfo = await new Promise((r) => {
       gsMessages.sendRequestInfoToContentScript(tab.id, (error, tabInfo) =>
         r(tabInfo)
       );
@@ -466,7 +466,7 @@ var gsTabCheckManager = (function() {
   // Notably (for me), the key listener of the old content script remains active
   // if using: window.addEventListener('keydown', formInputListener);
   function reinjectContentScriptOnTab(tab) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       gsUtils.log(
         tab.id,
         QUEUE_ID,
@@ -481,7 +481,7 @@ var gsTabCheckManager = (function() {
         );
         resolve(null);
       }, 10000);
-      gsMessages.executeScriptOnTab(tab.id, 'js/contentscript.js', error => {
+      gsMessages.executeScriptOnTab(tab.id, 'js/contentscript.js', (error) => {
         clearTimeout(executeScriptTimeout);
         if (error) {
           gsUtils.log(
@@ -494,10 +494,10 @@ var gsTabCheckManager = (function() {
         }
         tgs
           .initialiseTabContentScript(tab)
-          .then(tabInfo => {
+          .then((tabInfo) => {
             resolve(tabInfo);
           })
-          .catch(error => {
+          .catch((error) => {
             resolve(null);
           });
       });

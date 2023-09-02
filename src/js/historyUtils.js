@@ -1,6 +1,6 @@
 /* global chrome, gsIndexedDb, gsUtils */
 // eslint-disable-next-line no-unused-vars
-var historyUtils = (function(global) {
+var historyUtils = (function (global) {
   'use strict';
 
   if (
@@ -11,18 +11,18 @@ var historyUtils = (function(global) {
   }
   chrome.extension.getBackgroundPage().tgs.setViewGlobals(global);
 
-  var noop = function() {};
+  var noop = function () {};
 
   function importSession(e) {
     var f = e.target.files[0];
     if (f) {
       var r = new FileReader();
-      r.onload = function(e) {
+      r.onload = function (e) {
         var contents = e.target.result;
         if (f.type !== 'text/plain') {
           alert(chrome.i18n.getMessage('js_history_import_fail'));
         } else {
-          handleImport(f.name, contents).then(function() {
+          handleImport(f.name, contents).then(function () {
             window.location.reload();
           });
         }
@@ -39,8 +39,8 @@ var historyUtils = (function(global) {
       sessionName
     );
     if (sessionName) {
-      const shouldSave = await new Promise(resolve => {
-        validateNewSessionName(sessionName, function(result) {
+      const shouldSave = await new Promise((resolve) => {
+        validateNewSessionName(sessionName, function (result) {
           resolve(result);
         });
       });
@@ -51,7 +51,7 @@ var historyUtils = (function(global) {
       var sessionId = '_' + gsUtils.generateHashCode(sessionName);
       var windows = [];
 
-      var createNextWindow = function() {
+      var createNextWindow = function () {
         return {
           id: sessionId + '_' + windows.length,
           tabs: [],
@@ -106,7 +106,7 @@ var historyUtils = (function(global) {
   function exportSessionWithId(sessionId, callback) {
     callback = typeof callback !== 'function' ? noop : callback;
 
-    gsIndexedDb.fetchSessionBySessionId(sessionId).then(function(session) {
+    gsIndexedDb.fetchSessionBySessionId(sessionId).then(function (session) {
       if (!session || !session.windows) {
         callback();
       } else {
@@ -118,8 +118,8 @@ var historyUtils = (function(global) {
   function exportSession(session, callback) {
     let sessionString = '';
 
-    session.windows.forEach(function(curWindow, index) {
-      curWindow.tabs.forEach(function(curTab, tabIndex) {
+    session.windows.forEach(function (curWindow, index) {
+      curWindow.tabs.forEach(function (curTab, tabIndex) {
         if (gsUtils.isSuspendedTab(curTab)) {
           sessionString += gsUtils.getOriginalUrl(curTab.url) + '\n';
         } else {
@@ -141,8 +141,8 @@ var historyUtils = (function(global) {
   }
 
   function validateNewSessionName(sessionName, callback) {
-    gsIndexedDb.fetchSavedSessions().then(function(savedSessions) {
-      var nameExists = savedSessions.some(function(savedSession, index) {
+    gsIndexedDb.fetchSavedSessions().then(function (savedSessions) {
+      var nameExists = savedSessions.some(function (savedSession, index) {
         return savedSession.name === sessionName;
       });
       if (nameExists) {
@@ -159,7 +159,7 @@ var historyUtils = (function(global) {
   }
 
   function saveSession(sessionId) {
-    gsIndexedDb.fetchSessionBySessionId(sessionId).then(function(session) {
+    gsIndexedDb.fetchSessionBySessionId(sessionId).then(function (session) {
       if (!session) {
         gsUtils.warning(
           'historyUtils',
@@ -173,10 +173,10 @@ var historyUtils = (function(global) {
         chrome.i18n.getMessage('js_history_enter_name_for_session')
       );
       if (sessionName) {
-        historyUtils.validateNewSessionName(sessionName, function(shouldSave) {
+        historyUtils.validateNewSessionName(sessionName, function (shouldSave) {
           if (shouldSave) {
             session.name = sessionName;
-            gsIndexedDb.addToSavedSessions(session).then(function() {
+            gsIndexedDb.addToSavedSessions(session).then(function () {
               window.location.reload();
             });
           }
@@ -187,17 +187,19 @@ var historyUtils = (function(global) {
 
   function migrateTabs(from_id) {
     if (from_id.length == 32) {
-      chrome.tabs.query({}, function(tabs){
+      chrome.tabs.query({}, function (tabs) {
         var count = 0;
         var prefix_before = 'chrome-extension://' + from_id;
-        var prefix_after  = 'chrome-extension://' + chrome.i18n.getMessage('@@extension_id');
+        var prefix_after =
+          'chrome-extension://' + chrome.i18n.getMessage('@@extension_id');
         for (var tab of tabs) {
           if (!tab.url.startsWith(prefix_before)) {
             continue;
           }
           count += 1;
-          var migrated_url = prefix_after + tab.url.substr(prefix_before.length);
-          chrome.tabs.update(tab.id, {url: migrated_url});
+          var migrated_url =
+            prefix_after + tab.url.substr(prefix_before.length);
+          chrome.tabs.update(tab.id, { url: migrated_url });
         }
         alert(chrome.i18n.getMessage('js_history_migrate_success', '' + count));
       });
@@ -212,6 +214,6 @@ var historyUtils = (function(global) {
     exportSessionWithId,
     validateNewSessionName,
     saveSession,
-    migrateTabs
+    migrateTabs,
   };
 })(this);

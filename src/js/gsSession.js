@@ -1,6 +1,6 @@
 /*global chrome, localStorage, tgs, gsStorage, gsIndexedDb, gsUtils, gsChrome, gsTabCheckManager, gsTabDiscardManager */
 // eslint-disable-next-line no-unused-vars
-var gsSession = (function() {
+var gsSession = (function () {
   'use strict';
 
   const tabsToRestorePerSecond = 12;
@@ -23,20 +23,18 @@ var gsSession = (function() {
     updatedUrl = chrome.extension.getURL('updated.html');
 
     // Set fileUrlsAccessAllowed to determine if extension can work on file:// URLs
-    await new Promise(r => {
-      chrome.extension.isAllowedFileSchemeAccess(isAllowedAccess => {
+    await new Promise((r) => {
+      chrome.extension.isAllowedFileSchemeAccess((isAllowedAccess) => {
         fileUrlsAccessAllowed = isAllowedAccess;
         r();
       });
     });
 
     //remove any update screens
-    await Promise.all([
-      gsUtils.removeTabsByUrlAsPromised(updatedUrl),
-    ]);
+    await Promise.all([gsUtils.removeTabsByUrlAsPromised(updatedUrl)]);
 
     //handle special event where an extension update is available
-    chrome.runtime.onUpdateAvailable.addListener(details => {
+    chrome.runtime.onUpdateAvailable.addListener((details) => {
       prepareForUpdate(details); //async
     });
     gsUtils.log('gsSession', 'init successful');
@@ -82,7 +80,7 @@ var gsSession = (function() {
   async function buildCurrentSession() {
     const currentWindows = await gsChrome.windowsGetAll();
     const tabsExist = currentWindows.some(
-      window => window.tabs && window.tabs.length
+      (window) => window.tabs && window.tabs.length
     );
     if (!tabsExist) {
       gsUtils.warning(
@@ -205,12 +203,13 @@ var gsSession = (function() {
       postRecoverySessionTabs
     );
 
-    const tabCheckResults = await gsTabCheckManager.performInitialisationTabChecks(
-      postRecoverySessionTabs
-    );
+    const tabCheckResults =
+      await gsTabCheckManager.performInitialisationTabChecks(
+        postRecoverySessionTabs
+      );
     const totalTabCheckCount = tabCheckResults.length;
     const successfulTabChecksCount = tabCheckResults.filter(
-      o => o === gsUtils.STATUS_SUSPENDED || o === gsUtils.STATUS_DISCARDED
+      (o) => o === gsUtils.STATUS_SUSPENDED || o === gsUtils.STATUS_DISCARDED
     ).length;
 
     startupTabCheckTimeTakenInSeconds = parseInt(
@@ -228,7 +227,8 @@ var gsSession = (function() {
   async function handleNormalStartup(currentSessionTabs, curVersion) {
     const shouldRecoverTabs = await checkForCrashRecovery(currentSessionTabs);
     if (shouldRecoverTabs) {
-      const lastExtensionRecoveryTimestamp = gsStorage.fetchLastExtensionRecoveryTimestamp();
+      const lastExtensionRecoveryTimestamp =
+        gsStorage.fetchLastExtensionRecoveryTimestamp();
       const hasCrashedRecently =
         lastExtensionRecoveryTimestamp &&
         Date.now() - lastExtensionRecoveryTimestamp < 1000 * 60 * 5;
@@ -284,9 +284,8 @@ var gsSession = (function() {
       }
     }
 
-    const sessionRestorePoint = await gsIndexedDb.fetchSessionRestorePoint(
-      lastVersion
-    );
+    const sessionRestorePoint =
+      await gsIndexedDb.fetchSessionRestorePoint(lastVersion);
     if (!sessionRestorePoint) {
       const lastSession = await gsIndexedDb.fetchLastSession();
       if (lastSession) {
@@ -311,7 +310,7 @@ var gsSession = (function() {
     if (shouldRecoverTabs) {
       if (!noNag) {
         await gsUtils.createTabAndWaitForFinishLoading(updatedUrl, 10000);
-      }  
+      }
 
       await recoverLostTabs();
       updated = true;
@@ -326,20 +325,20 @@ var gsSession = (function() {
         await gsUtils.removeTabsByUrlAsPromised(updatedUrl);
         if (!noNag) {
           await gsChrome.tabsCreate({ url: updatedUrl });
-        }  
+        }
       }
     } else {
       updated = true;
       if (!noNag) {
         await gsChrome.tabsCreate({ url: updatedUrl });
-      }  
+      }
     }
   }
 
   // This function is used only for testing
   async function triggerDiscardOfAllTabs() {
-    await new Promise(resolve => {
-      chrome.tabs.query({ active: false, discarded: false }, function(tabs) {
+    await new Promise((resolve) => {
+      chrome.tabs.query({ active: false, discarded: false }, function (tabs) {
         for (let i = 0; i < tabs.length; ++i) {
           if (tabs[i] === undefined || gsUtils.isSpecialTab(tabs[i])) {
             continue;
@@ -361,10 +360,10 @@ var gsSession = (function() {
     //if it is an extension crash, then in theory all suspended tabs will be gone
     //and all normal tabs will still exist with the same ids
     const currentSessionSuspendedTabs = currentSessionTabs.filter(
-      tab => !gsUtils.isSpecialTab(tab) && gsUtils.isSuspendedTab(tab)
+      (tab) => !gsUtils.isSpecialTab(tab) && gsUtils.isSuspendedTab(tab)
     );
     const currentSessionNonExtensionTabs = currentSessionTabs.filter(
-      o => o.url.indexOf(chrome.runtime.id) === -1
+      (o) => o.url.indexOf(chrome.runtime.id) === -1
     );
 
     if (currentSessionSuspendedTabs.length > 0) {
@@ -391,11 +390,11 @@ var gsSession = (function() {
       (a, o) => a.concat(o.tabs),
       []
     );
-    const lastSessionSuspendedTabs = lastSessionTabs.filter(o =>
+    const lastSessionSuspendedTabs = lastSessionTabs.filter((o) =>
       gsUtils.isSuspendedTab(o)
     );
     const lastSessionNonExtensionTabs = lastSessionTabs.filter(
-      o => o.url.indexOf(chrome.runtime.id) === -1
+      (o) => o.url.indexOf(chrome.runtime.id) === -1
     );
 
     if (lastSessionSuspendedTabs.length === 0) {
@@ -412,7 +411,7 @@ var gsSession = (function() {
     function matchingTabExists(tab) {
       if (tab.url.indexOf('chrome://newtab') === 0 && tab.index === 0)
         return false;
-      return lastSessionTabs.some(o => o.id === tab.id && o.url === tab.url);
+      return lastSessionTabs.some((o) => o.id === tab.id && o.url === tab.url);
     }
     const matchingTabIdsCount = currentSessionNonExtensionTabs.reduce(
       (a, o) => (matchingTabExists(o) ? a + 1 : a),
@@ -457,10 +456,11 @@ var gsSession = (function() {
     gsUtils.removeInternalUrlsFromSession(lastSession);
 
     const currentWindows = await gsChrome.windowsGetAll();
-    const matchedCurrentWindowBySessionWindowId = matchCurrentWindowsWithLastSessionWindows(
-      lastSession.windows,
-      currentWindows
-    );
+    const matchedCurrentWindowBySessionWindowId =
+      matchCurrentWindowsWithLastSessionWindows(
+        lastSession.windows,
+        currentWindows
+      );
 
     //attempt to automatically restore any lost tabs/windows in their proper positions
     const lastFocusedWindow = await gsChrome.windowsGetLastFocused();
@@ -497,27 +497,26 @@ var gsSession = (function() {
     const matchedCurrentWindowBySessionWindowId = {};
 
     //if there is a current window open that matches the id of the session window id then match it
-    unmatchedSessionWindows.slice().forEach(function(sessionWindow) {
-      const matchingCurrentWindow = unmatchedCurrentWindows.find(function(
-        window
-      ) {
-        return window.id === sessionWindow.id;
-      });
+    unmatchedSessionWindows.slice().forEach(function (sessionWindow) {
+      const matchingCurrentWindow = unmatchedCurrentWindows.find(
+        function (window) {
+          return window.id === sessionWindow.id;
+        }
+      );
       if (matchingCurrentWindow) {
-        matchedCurrentWindowBySessionWindowId[
-          sessionWindow.id
-        ] = matchingCurrentWindow;
+        matchedCurrentWindowBySessionWindowId[sessionWindow.id] =
+          matchingCurrentWindow;
         //remove from unmatchedSessionWindows and unmatchedCurrentWindows
-        unmatchedSessionWindows = unmatchedSessionWindows.filter(function(
-          window
-        ) {
-          return window.id !== sessionWindow.id;
-        });
-        unmatchedCurrentWindows = unmatchedCurrentWindows.filter(function(
-          window
-        ) {
-          return window.id !== matchingCurrentWindow.id;
-        });
+        unmatchedSessionWindows = unmatchedSessionWindows.filter(
+          function (window) {
+            return window.id !== sessionWindow.id;
+          }
+        );
+        unmatchedCurrentWindows = unmatchedCurrentWindows.filter(
+          function (window) {
+            return window.id !== matchingCurrentWindow.id;
+          }
+        );
       }
     });
 
@@ -540,32 +539,31 @@ var gsSession = (function() {
       unmatchedCurrentWindows.length > 0
     ) {
       const maxTabMatchCount = Math.max(
-        ...tabMatchingObjects.map(function(o) {
+        ...tabMatchingObjects.map(function (o) {
           return o.tabMatchCount;
         })
       );
-      const bestTabMatchingObject = tabMatchingObjects.find(function(o) {
+      const bestTabMatchingObject = tabMatchingObjects.find(function (o) {
         return o.tabMatchCount === maxTabMatchCount;
       });
 
       matchedCurrentWindowBySessionWindowId[
         bestTabMatchingObject.sessionWindow.id
-      ] =
-        bestTabMatchingObject.currentWindow;
+      ] = bestTabMatchingObject.currentWindow;
 
       //remove from unmatchedSessionWindows and unmatchedCurrentWindows
       const unmatchedSessionWindowsLengthBefore =
         unmatchedSessionWindows.length;
-      unmatchedSessionWindows = unmatchedSessionWindows.filter(function(
-        window
-      ) {
-        return window.id !== bestTabMatchingObject.sessionWindow.id;
-      });
-      unmatchedCurrentWindows = unmatchedCurrentWindows.filter(function(
-        window
-      ) {
-        return window.id !== bestTabMatchingObject.currentWindow.id;
-      });
+      unmatchedSessionWindows = unmatchedSessionWindows.filter(
+        function (window) {
+          return window.id !== bestTabMatchingObject.sessionWindow.id;
+        }
+      );
+      unmatchedCurrentWindows = unmatchedCurrentWindows.filter(
+        function (window) {
+          return window.id !== bestTabMatchingObject.currentWindow.id;
+        }
+      );
       gsUtils.log(
         'gsUtils',
         'Matched with tab count of ' + maxTabMatchCount + ': ',
@@ -574,7 +572,7 @@ var gsSession = (function() {
       );
 
       //remove from tabMatchingObjects
-      tabMatchingObjects = tabMatchingObjects.filter(function(o) {
+      tabMatchingObjects = tabMatchingObjects.filter(function (o) {
         return (
           (o.sessionWindow !== bestTabMatchingObject.sessionWindow) &
           (o.currentWindow !== bestTabMatchingObject.currentWindow)
@@ -594,18 +592,18 @@ var gsSession = (function() {
 
   function generateTabMatchingObjects(sessionWindows, currentWindows) {
     const unsuspendedSessionUrlsByWindowId = {};
-    sessionWindows.forEach(function(sessionWindow) {
+    sessionWindows.forEach(function (sessionWindow) {
       unsuspendedSessionUrlsByWindowId[sessionWindow.id] = [];
-      sessionWindow.tabs.forEach(function(curTab) {
+      sessionWindow.tabs.forEach(function (curTab) {
         if (gsUtils.isNormalTab(curTab)) {
           unsuspendedSessionUrlsByWindowId[sessionWindow.id].push(curTab.url);
         }
       });
     });
     const unsuspendedCurrentUrlsByWindowId = {};
-    currentWindows.forEach(function(currentWindow) {
+    currentWindows.forEach(function (currentWindow) {
       unsuspendedCurrentUrlsByWindowId[currentWindow.id] = [];
-      currentWindow.tabs.forEach(function(curTab) {
+      currentWindow.tabs.forEach(function (curTab) {
         if (gsUtils.isNormalTab(curTab)) {
           unsuspendedCurrentUrlsByWindowId[currentWindow.id].push(curTab.url);
         }
@@ -613,13 +611,13 @@ var gsSession = (function() {
     });
 
     const tabMatchingObjects = [];
-    sessionWindows.forEach(function(sessionWindow) {
-      currentWindows.forEach(function(currentWindow) {
+    sessionWindows.forEach(function (sessionWindow) {
+      currentWindows.forEach(function (currentWindow) {
         const unsuspendedSessionUrls =
           unsuspendedSessionUrlsByWindowId[sessionWindow.id];
         const unsuspendedCurrentUrls =
           unsuspendedCurrentUrlsByWindowId[currentWindow.id];
-        const matchCount = unsuspendedCurrentUrls.filter(function(url) {
+        const matchCount = unsuspendedCurrentUrls.filter(function (url) {
           return unsuspendedSessionUrls.includes(url);
         }).length;
         tabMatchingObjects.push({
@@ -670,7 +668,7 @@ var gsSession = (function() {
           !currentTabIds.includes(sessionTab.id)
         ) {
           tabPromises.push(
-            new Promise(async resolve => {
+            new Promise(async (resolve) => {
               await gsUtils.setTimeout(i * 20);
               // dont await createNewTab as we want them to happen concurrently (but staggered)
               createNewTabFromSessionTab(
@@ -710,7 +708,7 @@ var gsSession = (function() {
     const tabPromises = [];
     for (const [i, sessionTab] of sessionWindow.tabs.entries()) {
       tabPromises.push(
-        new Promise(async resolve => {
+        new Promise(async (resolve) => {
           await gsUtils.setTimeout(i * (1000 / tabsToRestorePerSecond));
           // dont await createNewTab as we want them to happen concurrently (but staggered)
           createNewTabFromSessionTab(

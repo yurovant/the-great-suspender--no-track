@@ -1,13 +1,13 @@
 /*global chrome, tgs, gsStorage, gsSession, gsUtils */
-(function(global) {
+(function (global) {
   'use strict';
 
   chrome.extension.getBackgroundPage().tgs.setViewGlobals(global);
 
   var globalActionElListener;
 
-  var getTabStatus = function(retriesRemaining, callback) {
-    tgs.getActiveTabStatus(function(status) {
+  var getTabStatus = function (retriesRemaining, callback) {
+    tgs.getActiveTabStatus(function (status) {
       if (
         status !== gsUtils.STATUS_UNKNOWN &&
         status !== gsUtils.STATUS_LOADING
@@ -21,15 +21,15 @@
           retriesRemaining--;
           timeout = 200;
         }
-        setTimeout(function() {
+        setTimeout(function () {
           getTabStatus(retriesRemaining, callback);
         }, timeout);
       }
     });
   };
   function getTabStatusAsPromise(retries, allowTransientStates) {
-    return new Promise(function(resolve) {
-      getTabStatus(retries, function(status) {
+    return new Promise(function (resolve) {
+      getTabStatus(retries, function (status) {
         if (
           !allowTransientStates &&
           (status === gsUtils.STATUS_UNKNOWN ||
@@ -42,10 +42,10 @@
     });
   }
   function getSelectedTabsAsPromise() {
-    return new Promise(function(resolve) {
+    return new Promise(function (resolve) {
       chrome.tabs.query(
         { highlighted: true, lastFocusedWindow: true },
-        function(tabs) {
+        function (tabs) {
           resolve(tabs);
         }
       );
@@ -56,7 +56,7 @@
     gsUtils.documentReadyAndLocalisedAsPromsied(document),
     getTabStatusAsPromise(0, true),
     getSelectedTabsAsPromise(),
-  ]).then(function([domLoadedEvent, initialTabStatus, selectedTabs]) {
+  ]).then(function ([domLoadedEvent, initialTabStatus, selectedTabs]) {
     setSuspendSelectedVisibility(selectedTabs);
     setStatus(initialTabStatus);
     showPopupContents();
@@ -66,7 +66,7 @@
       initialTabStatus === gsUtils.STATUS_UNKNOWN ||
       initialTabStatus === gsUtils.STATUS_LOADING
     ) {
-      getTabStatusAsPromise(50, false).then(function(finalTabStatus) {
+      getTabStatusAsPromise(50, false).then(function (finalTabStatus) {
         setStatus(finalTabStatus);
       });
     }
@@ -245,8 +245,8 @@
         actionEl.removeEventListener('click', globalActionElListener);
       }
       if (tgsHanderFunc) {
-        globalActionElListener = function(e) {
-          tgsHanderFunc(function(newTabStatus) {
+        globalActionElListener = function (e) {
+          tgsHanderFunc(function (newTabStatus) {
             setStatus(newTabStatus);
           });
           // window.close();
@@ -261,7 +261,7 @@
     if (theme === 'dark') {
       document.body.classList.add('dark');
     }
-    setTimeout(function() {
+    setTimeout(function () {
       document.getElementById('popupContent').style.opacity = 1;
     }, 200);
   }
@@ -269,57 +269,57 @@
   function addClickHandlers() {
     document
       .getElementById('unsuspendOne')
-      .addEventListener('click', function(e) {
+      .addEventListener('click', function (e) {
         tgs.unsuspendHighlightedTab();
         window.close();
       });
     document
       .getElementById('suspendOne')
-      .addEventListener('click', function(e) {
+      .addEventListener('click', function (e) {
         tgs.suspendHighlightedTab();
         window.close();
       });
     document
       .getElementById('suspendAll')
-      .addEventListener('click', function(e) {
+      .addEventListener('click', function (e) {
         tgs.suspendAllTabs(false);
         window.close();
       });
     document
       .getElementById('unsuspendAll')
-      .addEventListener('click', function(e) {
+      .addEventListener('click', function (e) {
         tgs.unsuspendAllTabs();
         window.close();
       });
     document
       .getElementById('suspendSelected')
-      .addEventListener('click', function(e) {
+      .addEventListener('click', function (e) {
         tgs.suspendSelectedTabs();
         window.close();
       });
     document
       .getElementById('unsuspendSelected')
-      .addEventListener('click', function(e) {
+      .addEventListener('click', function (e) {
         tgs.unsuspendSelectedTabs();
         window.close();
       });
     document
       .getElementById('whitelistDomain')
-      .addEventListener('click', function(e) {
+      .addEventListener('click', function (e) {
         tgs.whitelistHighlightedTab(false);
         setStatus(gsUtils.STATUS_WHITELISTED);
         // window.close();
       });
     document
       .getElementById('whitelistPage')
-      .addEventListener('click', function(e) {
+      .addEventListener('click', function (e) {
         tgs.whitelistHighlightedTab(true);
         setStatus(gsUtils.STATUS_WHITELISTED);
         // window.close();
       });
     document
       .getElementById('settingsLink')
-      .addEventListener('click', function(e) {
+      .addEventListener('click', function (e) {
         chrome.tabs.create({
           url: chrome.extension.getURL('options.html'),
         });

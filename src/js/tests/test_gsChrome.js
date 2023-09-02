@@ -1,25 +1,25 @@
 /*global chrome, gsUtils, gsChrome, assertTrue */
 var testSuites = typeof testSuites === 'undefined' ? [] : testSuites;
 testSuites.push(
-  (function() {
+  (function () {
     'use strict';
 
     async function removeTestTab(tabId, retainFocus) {
-      const currentTab = await new Promise(r => chrome.tabs.getCurrent(r));
-      await new Promise(r => chrome.tabs.remove(tabId, r));
+      const currentTab = await new Promise((r) => chrome.tabs.getCurrent(r));
+      await new Promise((r) => chrome.tabs.remove(tabId, r));
       if (retainFocus) {
-        await new Promise(r =>
+        await new Promise((r) =>
           chrome.tabs.update(currentTab.id, { active: true }, r)
         );
       }
     }
     async function removeTestWindow(windowId, retainFocus) {
-      const currentWindow = await new Promise(r =>
+      const currentWindow = await new Promise((r) =>
         chrome.windows.getLastFocused(r)
       );
-      await new Promise(r => chrome.windows.remove(windowId, r));
-      await new Promise(resolve =>
-        chrome.windows.get(windowId, async window => {
+      await new Promise((r) => chrome.windows.remove(windowId, r));
+      await new Promise((resolve) =>
+        chrome.windows.get(windowId, async (window) => {
           if (chrome.runtime.lastError) {
             // do nothing. window removed successfully
           } else {
@@ -30,7 +30,7 @@ testSuites.push(
         })
       );
       if (retainFocus) {
-        await new Promise(r =>
+        await new Promise((r) =>
           chrome.windows.update(currentWindow.id, { focused: true }, r)
         );
       }
@@ -45,34 +45,34 @@ testSuites.push(
         const cookieName = 'gsTest';
         const cookieValue = 'rabbitts';
 
-        await new Promise(r =>
+        await new Promise((r) =>
           chrome.cookies.remove({ url: cookieUrl, name: cookieName }, r)
         );
-        const cookieAtStart = await new Promise(r =>
+        const cookieAtStart = await new Promise((r) =>
           chrome.cookies.get({ url: cookieUrl, name: cookieName }, r)
         );
         const isCookieAtStartValid = cookieAtStart === null;
 
-        await new Promise(r =>
+        await new Promise((r) =>
           chrome.cookies.set(
             { url: cookieUrl, name: cookieName, value: cookieValue },
             r
           )
         );
-        const cookieBefore = await new Promise(r =>
+        const cookieBefore = await new Promise((r) =>
           chrome.cookies.get({ url: cookieUrl, name: cookieName }, r)
         );
         const isCookieBeforeValid = cookieBefore.value === cookieValue;
 
         const cookiesBefore = await gsChrome.cookiesGetAll();
         const isCookiePresentInGetAll = cookiesBefore.some(
-          o => o.value.indexOf(cookieValue) === 0
+          (o) => o.value.indexOf(cookieValue) === 0
         );
 
         await gsChrome.cookiesRemove(cookieUrl, cookieName);
         const cookiesAfter = await gsChrome.cookiesGetAll();
         const isCookieRemovedFromGetAll = cookiesAfter.every(
-          o => o.value.indexOf(cookieValue) !== 0
+          (o) => o.value.indexOf(cookieValue) !== 0
         );
 
         return assertTrue(
@@ -113,7 +113,7 @@ testSuites.push(
         };
 
         // create a test tab
-        const testTab1 = await new Promise(r =>
+        const testTab1 = await new Promise((r) =>
           chrome.tabs.create({ url: testTabUrl, active: false }, r)
         );
         const isTestTab1Valid = testTab1.url === testTabUrl;
@@ -151,7 +151,7 @@ testSuites.push(
         };
 
         // create a test tab to update
-        const testTab1 = await new Promise(r =>
+        const testTab1 = await new Promise((r) =>
           chrome.tabs.create({ url: testTabUrl, active: false }, r)
         );
         const isTestTab1Valid = testTab1.url === testTabUrl;
@@ -202,7 +202,7 @@ testSuites.push(
         };
 
         // create a test tab
-        const testTab1 = await new Promise(r =>
+        const testTab1 = await new Promise((r) =>
           chrome.tabs.create({ url: testTabUrl, active: false }, r)
         );
         const isTestTab1Valid = testTab1.url === testTabUrl;
@@ -241,7 +241,7 @@ testSuites.push(
         const tabsBefore = await gsChrome.tabsQuery();
 
         // create a test tab
-        const testTab1 = await new Promise(r =>
+        const testTab1 = await new Promise((r) =>
           chrome.tabs.create({ url: testTabUrl, active: false }, r)
         );
         const isTestTab1Valid = testTab1.url === testTabUrl;
@@ -265,7 +265,7 @@ testSuites.push(
         };
 
         // create a test tab
-        const testTab1 = await new Promise(r =>
+        const testTab1 = await new Promise((r) =>
           chrome.tabs.create({ url: testTabUrl, active: false }, r)
         );
         const isTestTab1Valid = testTab1.url === testTabUrl;
@@ -292,7 +292,7 @@ testSuites.push(
 
       // Test gsChrome.windowsCreate
       async () => {
-        const windowsBefore = await new Promise(r =>
+        const windowsBefore = await new Promise((r) =>
           chrome.windows.getAll({ populate: true }, r)
         );
 
@@ -302,7 +302,7 @@ testSuites.push(
         });
         const isTestWindow1Valid = testWindow1.tabs.length === 1;
 
-        const windowsAfter = await new Promise(r =>
+        const windowsAfter = await new Promise((r) =>
           chrome.windows.getAll({ populate: true }, r)
         );
         const areWindowsAfterValid =
@@ -324,7 +324,7 @@ testSuites.push(
         };
 
         // create a test window
-        const testWindow1 = await new Promise(r =>
+        const testWindow1 = await new Promise((r) =>
           chrome.windows.create({ focused: false }, r)
         );
         const isTestWindow1Valid = testWindow1.tabs.length === 1;
@@ -358,7 +358,7 @@ testSuites.push(
         const isTestWindow1Valid = testWindow1.focused === true;
 
         // create a test window
-        const testWindow2a = await new Promise(r =>
+        const testWindow2a = await new Promise((r) =>
           chrome.windows.create({ focused: true }, r)
         );
         const testWindow2b = await gsChrome.windowsGetLastFocused();
@@ -383,7 +383,7 @@ testSuites.push(
         const windowsBefore = await gsChrome.windowsGetAll();
 
         // create a test window
-        const testWindow1 = await new Promise(r =>
+        const testWindow1 = await new Promise((r) =>
           chrome.windows.create({ focused: false }, r)
         );
         const isTestWindow1Valid = testWindow1.tabs.length === 1;
@@ -408,7 +408,7 @@ testSuites.push(
         };
 
         // create a test window to update
-        const testWindow1 = await new Promise(r =>
+        const testWindow1 = await new Promise((r) =>
           chrome.windows.create({ focused: false }, r)
         );
         const isTestWindow1Valid = testWindow1.tabs.length === 1;

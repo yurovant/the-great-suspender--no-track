@@ -1,5 +1,5 @@
 /*global chrome, gsSession, gsUtils */
-(function(global) {
+(function (global) {
   'use strict';
 
   try {
@@ -14,11 +14,11 @@
     document.getElementById('updated').style.display = 'block';
   }
 
-  gsUtils.documentReadyAndLocalisedAsPromsied(document).then(function() {
+  gsUtils.documentReadyAndLocalisedAsPromsied(document).then(function () {
     // var versionEl = document.getElementById('updatedVersion');
     // versionEl.innerHTML = 'v' + chrome.runtime.getManifest().version;
 
-    document.getElementById('sessionManagerLink').onclick = function(e) {
+    document.getElementById('sessionManagerLink').onclick = function (e) {
       e.preventDefault();
       chrome.tabs.create({ url: chrome.extension.getURL('history.html') });
     };

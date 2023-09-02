@@ -1,5 +1,5 @@
 /* global chrome, XMLHttpRequest, gsStorage, gsUtils */
-(function(global) {
+(function (global) {
   'use strict';
 
   try {
@@ -9,7 +9,7 @@
     return;
   }
 
-  gsUtils.documentReadyAndLocalisedAsPromsied(document).then(function() {
+  gsUtils.documentReadyAndLocalisedAsPromsied(document).then(function () {
     var versionEl = document.getElementById('aboutVersion');
     versionEl.innerHTML = 'v' + chrome.runtime.getManifest().version;
 
@@ -17,11 +17,10 @@
     if (chrome.extension.inIncognitoContext) {
       Array.prototype.forEach.call(
         document.getElementsByClassName('noIncognito'),
-        function(el) {
+        function (el) {
           el.style.display = 'none';
         }
       );
     }
   });
-
 })(this);

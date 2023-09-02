@@ -1,6 +1,6 @@
 /*global tgs, gsFavicon, gsStorage, gsSession, gsUtils, gsIndexedDb */
 // eslint-disable-next-line no-unused-vars
-var gsSuspendedTab = (function() {
+var gsSuspendedTab = (function () {
   'use strict';
 
   async function initTab(tab, tabView, { quickInit }) {
@@ -89,7 +89,7 @@ var gsSuspendedTab = (function() {
     }
     tabView.document.getElementById('disconnectedNotice').style.display =
       'none';
-    setTimeout(function() {
+    setTimeout(function () {
       tabView.document.getElementById('disconnectedNotice').style.display =
         'block';
     }, 50);
@@ -140,7 +140,7 @@ var gsSuspendedTab = (function() {
     // Prevent unsuspend by parent container
     // Using mousedown event otherwise click can still be triggered if
     // mouse is released outside of this element
-    _document.getElementById('gsTopBarTitle').onmousedown = function(e) {
+    _document.getElementById('gsTopBarTitle').onmousedown = function (e) {
       e.stopPropagation();
     };
   }
@@ -148,7 +148,7 @@ var gsSuspendedTab = (function() {
   function setUrl(_document, url) {
     _document.getElementById('gsTopBarUrl').innerHTML = cleanUrl(url);
     _document.getElementById('gsTopBarUrl').setAttribute('href', url);
-    _document.getElementById('gsTopBarUrl').onmousedown = function(e) {
+    _document.getElementById('gsTopBarUrl').onmousedown = function (e) {
       e.stopPropagation();
     };
   }
@@ -209,21 +209,20 @@ var gsSuspendedTab = (function() {
   }
 
   function buildImagePreview(_document, tab, previewUri) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const previewEl = _document.createElement('div');
       const bodyEl = _document.getElementsByTagName('body')[0];
       previewEl.setAttribute('id', 'gsPreviewContainer');
       previewEl.classList.add('gsPreviewContainer');
-      previewEl.innerHTML = _document.getElementById(
-        'previewTemplate'
-      ).innerHTML;
+      previewEl.innerHTML =
+        _document.getElementById('previewTemplate').innerHTML;
       const unsuspendTabHandler = buildUnsuspendTabHandler(_document, tab);
       previewEl.onclick = unsuspendTabHandler;
       gsUtils.localiseHtml(previewEl);
       bodyEl.appendChild(previewEl);
 
       const previewImgEl = _document.getElementById('gsPreviewImg');
-      const onLoadedHandler = function() {
+      const onLoadedHandler = function () {
         previewImgEl.removeEventListener('load', onLoadedHandler);
         previewImgEl.removeEventListener('error', onLoadedHandler);
         resolve();
@@ -296,7 +295,7 @@ var gsSuspendedTab = (function() {
     // if the tab is refreshed, then on reload the url will match and the tab will unsuspend
     // if the url is changed then on reload the url will not match
     // if the tab is closed, the reload will never occur
-    _window.addEventListener('beforeunload', function(e) {
+    _window.addEventListener('beforeunload', function (e) {
       gsUtils.log(tab.id, 'BeforeUnload triggered: ' + tab.url);
       if (tgs.isCurrentFocusedTab(tab)) {
         tgs.setTabStatePropForTabId(tab.id, tgs.STATE_UNLOADED_URL, tab.url);
@@ -317,7 +316,7 @@ var gsSuspendedTab = (function() {
   }
 
   function buildUnsuspendTabHandler(_document, tab) {
-    return function(e) {
+    return function (e) {
       e.preventDefault();
       e.stopPropagation();
       if (e.target.id === 'setKeyboardShortcut') {

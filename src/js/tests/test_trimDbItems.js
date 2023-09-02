@@ -1,7 +1,7 @@
 /*global chrome, gsIndexedDb, gsSession, getFixture, assertTrue, FIXTURE_CURRENT_SESSIONS */
 var testSuites = typeof testSuites === 'undefined' ? [] : testSuites;
 testSuites.push(
-  (function() {
+  (function () {
     'use strict';
 
     const tests = [
@@ -40,9 +40,8 @@ testSuites.push(
         await gsIndexedDb.trimDbItems();
 
         // Ensure current session still exists
-        const currentSession = await gsIndexedDb.fetchSessionBySessionId(
-          currentSessionId
-        );
+        const currentSession =
+          await gsIndexedDb.fetchSessionBySessionId(currentSessionId);
         const isCurrentSessionValid = currentSession !== null;
 
         // Ensure correct DB_CURRENT_SESSIONS items were trimmed

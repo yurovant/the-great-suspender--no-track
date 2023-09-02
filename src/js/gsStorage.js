@@ -26,7 +26,7 @@ const gsStorageSettings = {
   DISCARD_AFTER_SUSPEND: 'discardAfterSuspend',
   DISCARD_IN_PLACE_OF_SUSPEND: 'discardInPlaceOfSuspend',
   USE_ALT_SCREEN_CAPTURE_LIB: 'useAlternateScreenCaptureLib',
-  ENABLE_CLEAN_SCREENCAPS: 'cleanScreencaps'
+  ENABLE_CLEAN_SCREENCAPS: 'cleanScreencaps',
 };
 
 var gsStorage = {
@@ -41,9 +41,9 @@ var gsStorage = {
   SM_SUSPENDED_TAB_COUNT: 'suspendedTabCount',
   SM_TOTAL_TAB_COUNT: 'totalTabCount',
 
-  noop: function() {},
+  noop: function () {},
 
-  getSettingsDefaults: function() {
+  getSettingsDefaults: function () {
     const defaults = {};
     defaults[gsStorage.SCREEN_CAPTURE] = '0';
     defaults[gsStorage.SCREEN_CAPTURE_FORCE] = false;
@@ -75,11 +75,11 @@ var gsStorage = {
    */
 
   //populate localstorage settings with sync settings where undefined
-  initSettingsAsPromised: function() {
-    return new Promise(function(resolve) {
+  initSettingsAsPromised: function () {
+    return new Promise(function (resolve) {
       var defaultSettings = gsStorage.getSettingsDefaults();
       var defaultKeys = Object.keys(defaultSettings);
-      chrome.storage.sync.get(defaultKeys, function(syncedSettings) {
+      chrome.storage.sync.get(defaultKeys, function (syncedSettings) {
         gsUtils.log('gsStorage', 'syncedSettings on init: ', syncedSettings);
         gsSession.setSynchedSettingsOnInit(syncedSettings);
 
@@ -184,10 +184,10 @@ var gsStorage = {
    */
   checkManagedStorageAndOverride() {
     const settingsList = Object.keys(gsStorageSettings);
-    chrome.storage.managed.get(settingsList, result => {
+    chrome.storage.managed.get(settingsList, (result) => {
       const settings = gsStorage.getSettings();
 
-      Object.keys(result).forEach(key => {
+      Object.keys(result).forEach((key) => {
         if (key === 'WHITELIST') {
           settings[gsStorage[key]] = result[key].replace(/[\s\n]+/g, '\n');
         } else {
@@ -208,8 +208,8 @@ var gsStorage = {
   },
 
   // Listen for changes to synced settings
-  addSettingsSyncListener: function() {
-    chrome.storage.onChanged.addListener(function(remoteSettings, namespace) {
+  addSettingsSyncListener: function () {
+    chrome.storage.onChanged.addListener(function (remoteSettings, namespace) {
       if (namespace !== 'sync' || !remoteSettings) {
         return;
       }
@@ -219,7 +219,7 @@ var gsStorage = {
         var changedSettingKeys = [];
         var oldValueBySettingKey = {};
         var newValueBySettingKey = {};
-        Object.keys(remoteSettings).forEach(function(key) {
+        Object.keys(remoteSettings).forEach(function (key) {
           var remoteSetting = remoteSettings[key];
 
           // If nags are disabled locally, then ensure we disable them on synced profile
@@ -257,7 +257,7 @@ var gsStorage = {
 
   //due to migration issues and new settings being added, i have built in some redundancy
   //here so that getOption will always return a valid value.
-  getOption: function(prop) {
+  getOption: function (prop) {
     var settings = gsStorage.getSettings();
     if (typeof settings[prop] === 'undefined' || settings[prop] === null) {
       settings[prop] = gsStorage.getSettingsDefaults()[prop];
@@ -266,7 +266,7 @@ var gsStorage = {
     return settings[prop];
   },
 
-  setOption: function(prop, value) {
+  setOption: function (prop, value) {
     var settings = gsStorage.getSettings();
     settings[prop] = value;
     // gsUtils.log('gsStorage', 'gsStorage', 'setting prop: ' + prop + ' to value ' + value);
@@ -277,12 +277,12 @@ var gsStorage = {
   // syncSettings saves to chrome.storage.
   // Calling syncSettings has the unfortunate side-effect of triggering the chrome.storage.onChanged
   // listener which the re-saves the setting to localStorage a second time.
-  setOptionAndSync: function(prop, value) {
+  setOptionAndSync: function (prop, value) {
     gsStorage.setOption(prop, value);
     gsStorage.syncSettings();
   },
 
-  getSettings: function() {
+  getSettings: function () {
     var settings;
     try {
       settings = JSON.parse(localStorage.getItem('gsSettings'));
@@ -300,7 +300,7 @@ var gsStorage = {
     return settings;
   },
 
-  saveSettings: function(settings) {
+  saveSettings: function (settings) {
     try {
       localStorage.setItem('gsSettings', JSON.stringify(settings));
     } catch (e) {
@@ -313,7 +313,7 @@ var gsStorage = {
   },
 
   // Push settings to sync
-  syncSettings: function() {
+  syncSettings: function () {
     var settings = gsStorage.getSettings();
     if (settings[gsStorage.SYNC_SETTINGS]) {
       // Since sync is a local setting, delete it to simplify things.
@@ -336,7 +336,7 @@ var gsStorage = {
     }
   },
 
-  fetchLastVersion: function() {
+  fetchLastVersion: function () {
     var version;
     try {
       version = JSON.parse(localStorage.getItem(gsStorage.APP_VERSION));
@@ -350,7 +350,7 @@ var gsStorage = {
     version = version || '0.0.0';
     return version + '';
   },
-  setLastVersion: function(newVersion) {
+  setLastVersion: function (newVersion) {
     try {
       localStorage.setItem(gsStorage.APP_VERSION, JSON.stringify(newVersion));
     } catch (e) {
@@ -362,7 +362,7 @@ var gsStorage = {
     }
   },
 
-  fetchNoticeVersion: function() {
+  fetchNoticeVersion: function () {
     var lastNoticeVersion;
     try {
       lastNoticeVersion = JSON.parse(
@@ -378,7 +378,7 @@ var gsStorage = {
     lastNoticeVersion = lastNoticeVersion || '0';
     return lastNoticeVersion + '';
   },
-  setNoticeVersion: function(newVersion) {
+  setNoticeVersion: function (newVersion) {
     try {
       localStorage.setItem(gsStorage.LAST_NOTICE, JSON.stringify(newVersion));
     } catch (e) {
@@ -390,7 +390,7 @@ var gsStorage = {
     }
   },
 
-  fetchLastExtensionRecoveryTimestamp: function() {
+  fetchLastExtensionRecoveryTimestamp: function () {
     var lastExtensionRecoveryTimestamp;
     try {
       lastExtensionRecoveryTimestamp = JSON.parse(
@@ -405,7 +405,7 @@ var gsStorage = {
     }
     return lastExtensionRecoveryTimestamp;
   },
-  setLastExtensionRecoveryTimestamp: function(extensionRecoveryTimestamp) {
+  setLastExtensionRecoveryTimestamp: function (extensionRecoveryTimestamp) {
     try {
       localStorage.setItem(
         gsStorage.LAST_EXTENSION_RECOVERY,
@@ -422,7 +422,7 @@ var gsStorage = {
     }
   },
 
-  fetchSessionMetrics: function() {
+  fetchSessionMetrics: function () {
     var sessionMetrics = {};
     try {
       sessionMetrics = JSON.parse(
@@ -437,7 +437,7 @@ var gsStorage = {
     }
     return sessionMetrics;
   },
-  setSessionMetrics: function(sessionMetrics) {
+  setSessionMetrics: function (sessionMetrics) {
     try {
       localStorage.setItem(
         gsStorage.SM_SESSION_METRICS,
@@ -458,5 +458,5 @@ var gsStorage = {
    *
    * @param option The option name, such as "gsWhitelist" (not "WHITELIST")
    */
-  isOptionManaged: option => managedOptions.includes(option),
+  isOptionManaged: (option) => managedOptions.includes(option),
 };

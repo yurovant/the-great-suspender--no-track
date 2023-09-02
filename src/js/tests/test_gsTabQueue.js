@@ -1,7 +1,7 @@
 /*global chrome, GsTabQueue, gsUtils, assertTrue */
 var testSuites = typeof testSuites === 'undefined' ? [] : testSuites;
 testSuites.push(
-  (function() {
+  (function () {
     'use strict';
 
     const MAX_REQUEUES = 2;
@@ -102,12 +102,12 @@ testSuites.push(
       let isResultsValid = false;
       if (shouldGenerateException && exceptionFnType === 'resolveFalse') {
         isResultsValid =
-          results.length === tabCount && results.every(o => o === false);
+          results.length === tabCount && results.every((o) => o === false);
       } else if (shouldGenerateException && exceptionFnType === 'reject') {
         isResultsValid = typeof results === 'undefined';
       } else {
         isResultsValid =
-          results.length === tabCount && results.every(o => o === true);
+          results.length === tabCount && results.every((o) => o === true);
       }
 
       // Nasty hack here
@@ -218,7 +218,17 @@ testSuites.push(
         // Results should be undefined as Promises.all rejects.
         // Should reject.
         // Expected time taken: 5 * 10 + 5 * 50
-        return await makeTest(5, 100, 0, 1, 10, 'resolveTrue', 'reject', true, 300);
+        return await makeTest(
+          5,
+          100,
+          0,
+          1,
+          10,
+          'resolveTrue',
+          'reject',
+          true,
+          300
+        );
       },
 
       async () => {
@@ -265,7 +275,17 @@ testSuites.push(
         // Exception function rejects.
         // Should requeue up to 2 times then timeout.
         // Expected time taken: 1 * 250 + 1 * 50
-        return await makeTest(1, 100, 100, 1, 250, 'requeue', 'reject', true, 300);
+        return await makeTest(
+          1,
+          100,
+          100,
+          1,
+          250,
+          'requeue',
+          'reject',
+          true,
+          300
+        );
       },
     ];
 
