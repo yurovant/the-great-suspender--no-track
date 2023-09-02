@@ -1,4 +1,4 @@
-# The Great Suspender - Without analytics tracking
+# The Great Suspender fork without analytics tracking
 
 Modified version of "The Great Suspender" without analytics tracking and rogue JavaScript files from an anonymous developer who is now in control of the GitHub source and web store versions.
 
