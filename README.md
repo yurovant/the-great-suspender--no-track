@@ -25,7 +25,7 @@ Clone the repository and run these commands:
 
 It should say:
 ```
-Done, without errors.
+Done.
 ```
 
 ### Shoutouts
