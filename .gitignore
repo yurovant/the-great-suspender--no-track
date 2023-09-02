@@ -1,8 +1,16 @@
-**/Thumbs.db
-**/*.pem
-/node_modules
+# macOS related
+.DS_Store
+
+# Your generated key
+key.pem
+
+# IDE related
+/.idea/*
+/.vscode/*
+
+# Build related
 /assets/*
 /build/*
-/.idea/*
-/.debris/*
-.DS_Store
+
+# Node.js related
+/node_modules
