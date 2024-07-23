@@ -1,16 +1,16 @@
-# macOS related
-.DS_Store
-
 # Your generated key
 key.pem
+
+# Build related
+/assets/*
+/build/*
 
 # IDE related
 /.idea/*
 /.vscode/*
 
-# Build related
-/assets/*
-/build/*
+# macOS related
+.DS_Store
 
 # Node.js related
 /node_modules
