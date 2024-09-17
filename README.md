@@ -13,7 +13,7 @@ Modified version of `The Great Suspender` Chrome extension without analytics tra
 * [Reddit forum discussion](https://old.reddit.com/r/HobbyDrama/comments/jouwq7/open_source_development_the_great_suspender_saga/)
 * [Medium article](https://medium.com/nerd-for-tech/malware-in-browser-extensions-3805e8763dd5)
 
-This project is a fork from [v7.1.8 of The Great Suspender](https://github.com/greatsuspender/thegreatsuspender) with all tracking code removed, along with some annoying popups/prompts.
+This project is a fork from [v7.1.8 of The Great Suspender](https://github.com/greatsuspender/thegreatsuspender/releases/tag/v7.1.6) with all tracking code removed, along with some annoying popups/prompts.
 
 <h3>Build from GitHub</h3>
 <hr>
