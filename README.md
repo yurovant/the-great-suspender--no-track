@@ -1,7 +1,7 @@
 <h3>The Great Suspender fork without analytics tracking</h3>
 <hr>
 
-Modified version of "The Great Suspender" without analytics tracking and rogue JavaScript files from an anonymous developer who is now in control of the GitHub source and web store versions. I forked it for my personal use.
+Modified version of `The Great Suspender` extension without analytics tracking and rogue JavaScript files from an anonymous developer who is now in control of the GitHub source and web store versions. I forked it for my personal use.
 
 
 <h3>Read more</h3>
